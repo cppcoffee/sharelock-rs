@@ -25,6 +25,24 @@ fn test_lock_busy() {
 }
 
 #[test]
+fn test_common() {
+    let lock = SharedLock::new(5);
+
+    {
+        let r1 = lock.read().unwrap();
+        let r2 = lock.read().unwrap();
+        assert_eq!(*r1, 5);
+        assert_eq!(*r2, 5);
+    }
+
+    {
+        let mut w = lock.write().unwrap();
+        *w += 1;
+        assert_eq!(*w, 6);
+    }
+}
+
+#[test]
 fn test_validity() {
     const NUM_READERS: u32 = 8;
     const NUM_WRITERS: u32 = 2;
